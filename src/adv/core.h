@@ -34,15 +34,6 @@
     inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
       PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
 
-    inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
-
-    void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-      int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
     
 #undef SCHEME
 #undef APND_SCHEME
@@ -61,15 +52,6 @@
       int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
 
     inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
-
-    void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-      int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
       PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
 
     
@@ -92,15 +74,6 @@
     inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
       PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
 
-    inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
-
-    void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-      int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
     
 #undef SCHEME
 #undef APND_SCHEME
@@ -119,15 +92,6 @@
       int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
 
     inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
-
-    void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-      int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
       PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
 
     
@@ -150,15 +114,6 @@
     inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
       PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
 
-    inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
-
-    void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-      int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
     
 #undef SCHEME
 #undef APND_SCHEME
@@ -177,15 +132,6 @@
       int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
 
     inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
-
-    void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-      int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
       PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
 
     
@@ -208,21 +154,15 @@
     inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
       PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
 
-    inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
-
-    void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-      int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
-
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
     
 #undef SCHEME
 #undef APND_SCHEME
 #undef SCHEME_NUM
 
 
+
+    inline void gather_fv_2D (PREC * sc_old, PREC * sc_fv,
+      int iX, int iY, int nX, int nY, PREC delta_t);
 
 #endif
 

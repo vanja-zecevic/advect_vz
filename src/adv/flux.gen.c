@@ -46,7 +46,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)

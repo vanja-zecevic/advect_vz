@@ -136,7 +136,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -177,34 +177,6 @@ APND_SCHEME(get_face_2d) (iX, iY, nX, nY, 0, 1, 1, tid, delta_t,
   u_face, u_face_t, &sc_face, sc_old); 
 get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-  int iX, int iY, int nX, int nY, PREC delta_t)
-{
-int tid;
-
-PREC sum_face = LT(0.);
-PREC sc_face;
-
-tid = iY*nX + iX;
-
-/* x dir */
-read_face (iX, iY, nX, nY, 0, 0, 0, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY,-1, 0, 0, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-/* y dir */
-read_face (iX, iY, nX, nY, 0, 0, 1, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY, 0,-1, 1, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-*(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
 
@@ -324,7 +296,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -365,34 +337,6 @@ APND_SCHEME(get_face_2d) (iX, iY, nX, nY, 0, 1, 1, tid, delta_t,
   u_face, u_face_t, &sc_face, sc_old); 
 get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-  int iX, int iY, int nX, int nY, PREC delta_t)
-{
-int tid;
-
-PREC sum_face = LT(0.);
-PREC sc_face;
-
-tid = iY*nX + iX;
-
-/* x dir */
-read_face (iX, iY, nX, nY, 0, 0, 0, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY,-1, 0, 0, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-/* y dir */
-read_face (iX, iY, nX, nY, 0, 0, 1, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY, 0,-1, 1, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-*(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
 
@@ -512,7 +456,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -553,34 +497,6 @@ APND_SCHEME(get_face_2d) (iX, iY, nX, nY, 0, 1, 1, tid, delta_t,
   u_face, u_face_t, &sc_face, sc_old); 
 get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-  int iX, int iY, int nX, int nY, PREC delta_t)
-{
-int tid;
-
-PREC sum_face = LT(0.);
-PREC sc_face;
-
-tid = iY*nX + iX;
-
-/* x dir */
-read_face (iX, iY, nX, nY, 0, 0, 0, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY,-1, 0, 0, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-/* y dir */
-read_face (iX, iY, nX, nY, 0, 0, 1, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY, 0,-1, 1, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-*(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
 
@@ -700,7 +616,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -741,34 +657,6 @@ APND_SCHEME(get_face_2d) (iX, iY, nX, nY, 0, 1, 1, tid, delta_t,
   u_face, u_face_t, &sc_face, sc_old); 
 get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-  int iX, int iY, int nX, int nY, PREC delta_t)
-{
-int tid;
-
-PREC sum_face = LT(0.);
-PREC sc_face;
-
-tid = iY*nX + iX;
-
-/* x dir */
-read_face (iX, iY, nX, nY, 0, 0, 0, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY,-1, 0, 0, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-/* y dir */
-read_face (iX, iY, nX, nY, 0, 0, 1, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY, 0,-1, 1, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-*(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
 
@@ -888,7 +776,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -929,34 +817,6 @@ APND_SCHEME(get_face_2d) (iX, iY, nX, nY, 0, 1, 1, tid, delta_t,
   u_face, u_face_t, &sc_face, sc_old); 
 get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-  int iX, int iY, int nX, int nY, PREC delta_t)
-{
-int tid;
-
-PREC sum_face = LT(0.);
-PREC sc_face;
-
-tid = iY*nX + iX;
-
-/* x dir */
-read_face (iX, iY, nX, nY, 0, 0, 0, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY,-1, 0, 0, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-/* y dir */
-read_face (iX, iY, nX, nY, 0, 0, 1, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY, 0,-1, 1, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-*(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
 
@@ -1076,7 +936,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -1117,34 +977,6 @@ APND_SCHEME(get_face_2d) (iX, iY, nX, nY, 0, 1, 1, tid, delta_t,
   u_face, u_face_t, &sc_face, sc_old); 
 get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
-  int iX, int iY, int nX, int nY, PREC delta_t)
-{
-int tid;
-
-PREC sum_face = LT(0.);
-PREC sc_face;
-
-tid = iY*nX + iX;
-
-/* x dir */
-read_face (iX, iY, nX, nY, 0, 0, 0, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY,-1, 0, 0, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-/* y dir */
-read_face (iX, iY, nX, nY, 0, 0, 1, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY, 0,-1, 1, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-*(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
 
@@ -1264,7 +1096,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -1307,8 +1139,14 @@ get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
 
 }
+
+#undef SCHEME
+#undef APND_SCHEME
+#undef SCHEME_NUM
+
+
 /*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
+inline void gather_fv_2D (PREC * sc_old, PREC * sc_fv,
   int iX, int iY, int nX, int nY, PREC delta_t)
 {
 int tid;
@@ -1335,10 +1173,4 @@ sum_face -= sc_face;
 *(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
-
-#undef SCHEME
-#undef APND_SCHEME
-#undef SCHEME_NUM
-
-
 

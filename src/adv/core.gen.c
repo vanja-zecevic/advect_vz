@@ -135,7 +135,7 @@ else if (bc_phi == 2)
 
 #pragma omp parallel for private(iX, iY)
 for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(gather_fv_2D)
+  gather_fv_2D
     (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
 
 if      (bc_phi == 1)
@@ -178,8 +178,9 @@ get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
 
 }
+#pragma vzg splitend
 /*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(gather_fv_2D) (PREC * sc_old, PREC * sc_fv,
+inline void gather_fv_2D (PREC * sc_old, PREC * sc_fv,
   int iX, int iY, int nX, int nY, PREC delta_t)
 {
 int tid;
@@ -206,5 +207,4 @@ sum_face -= sc_face;
 *(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
 
 }
-#pragma vzg splitend
 

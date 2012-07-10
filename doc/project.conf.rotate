@@ -1,0 +1,46 @@
+nX 400
+nY 400
+nZ 1
+nT 2000
+t_report 100
+t_save 100
+delta_t 0.5
+bc_phi 1
+# bc_phi selects the boundary condition for phi
+# 0 = none (for testing)
+# 1 = periodic
+# 2 = zero gradient
+alpha 0.0
+algo 0
+# algo
+# 0 = generated files.                 1 = branching, lowest level.
+# 2 = branching, higher level.         3 = function pointers.
+# 4 = lliffe vectors, only quickest.   5 = face values
+# 6 = multi-dimensional flux limiter
+scheme 0
+# scheme
+# 0 = upwind         1 = laxwend
+# 2 = quickest_a     3 = quickest_b
+# 4 = upmulti        5 = utopia_simp
+# 6 = utopia
+#-------------------------------------------------
+phi_init_type 3
+# 0 = constant
+# 1 = gaussian hill
+# 2 = step change
+# 3 = cylinder
+phi_init_max 10.0
+phi_init_h_step 0.01
+gauss_offset 50
+gauss_B 7.0
+phi_init_cyl_rad 20
+#-------------------------------------------------
+u_init_type 0
+# u_init_type selects the velocity field
+# 0 = rigid body rotation
+# 1 = constant velocity
+# 2 = Taylor vortex
+u_init_max 1.0
+u_init_const_angle 0.45
+#-------------------------------------------------
+num_threads 4

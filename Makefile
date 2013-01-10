@@ -23,6 +23,9 @@ CFLAGS = -g -Wall -O3 -fopenmp -lm -lrt -Winline --param\
  max-inline-insns-single=5000 --param inline-unit-growth=500
 INCLUDES = -I./ -I./src/
 
+# Make automatically deletes generated source files unless
+.SECONDARY:
+
 IN_ADV := \
   flux.c \
   core.c \

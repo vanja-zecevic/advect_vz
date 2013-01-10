@@ -19,7 +19,8 @@
 NAME=advection
 
 CC = gcc
-CFLAGS = -g -Wall -O3 -fopenmp -lm -lrt
+CFLAGS = -g -Wall -O3 -fopenmp -lm -lrt -Winline --param\
+ max-inline-insns-single=5000 --param inline-unit-growth=500
 INCLUDES = -I./ -I./src/
 
 IN_ADV := \
@@ -38,6 +39,11 @@ IN_LIBVZ := \
 IN_RUN := \
   run2d.c
 
+GEN_SRC := \
+  src/adv/core.c \
+  src/adv/flux.c 
+GEN_HEADERS := $(GEN_SRC:%.c=%.h)
+
 OBJ_ADV    := $(IN_ADV:%.c=obj/adv/%.o)
 OBJ_LIBVZ  := $(IN_LIBVZ:%.c=obj/libvz/%.o)
 OBJ_RUN    := $(IN_RUN:%.c=obj/run/%.o)
@@ -55,40 +61,43 @@ bin/%: $(OBJ_ADV) $(OBJ_LIBVZ) $(OBJ_RUN)
 #-----------------------------------------------------------------------------
 # Objects.
 obj/adv/%.o: src/adv/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+	@echo -e '\033[1;34mCC CFLAGS INCLUDES\033[00m' -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 obj/libvz/%.o: src/libvz/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+	@echo -e '\033[1;34mCC CFLAGS INCLUDES\033[00m' -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 obj/run/%.o: src/run/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
+	@echo -e '\033[1;34mCC CFLAGS INCLUDES\033[00m' -c -o $@ $<
+	@$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
 
 #-----------------------------------------------------------------------------
 # Dependencies.
-dep/adv/%.d: src/adv/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -MM -MT $@ \
+dep/adv/%.d: src/adv/%.c $(GEN_HEADERS)
+	@echo -e '\033[1;36mCC CFLAGS INCLUDES -MM -MT\033[00m' $@ \
+  -MT $(subst dep/, obj/, $(@:.d=.o)) -o $@ $<
+	@$(CC) $(CFLAGS) $(INCLUDES) -MM -MT $@ \
   -MT $(subst dep/, obj/, $(@:.d=.o)) -o $@ $<
 
-dep/libvz/%.d: src/libvz/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -MM -MT $@ \
+dep/libvz/%.d: src/libvz/%.c $(GEN_HEADERS)
+	@echo -e '\033[1;36mCC CFLAGS INCLUDES -MM -MT\033[00m' $@ \
+  -MT $(subst dep/, obj/, $(@:.d=.o)) -o $@ $<
+	@$(CC) $(CFLAGS) $(INCLUDES) -MM -MT $@ \
   -MT $(subst dep/, obj/, $(@:.d=.o)) -o $@ $<
 
-dep/run/%.d: src/run/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -MM -MT $@ \
+dep/run/%.d: src/run/%.c  $(GEN_HEADERS)
+	@echo -e '\033[1;36mCC CFLAGS INCLUDES -MM -MT\033[00m' $@ \
+  -MT $(subst dep/, obj/, $(@:.d=.o)) -o $@ $<
+	@$(CC) $(CFLAGS) $(INCLUDES) -MM -MT $@ \
   -MT $(subst dep/, obj/, $(@:.d=.o)) -o $@ $<
 
 #-----------------------------------------------------------------------------
 # Generated files.
-src/adv/flux.c: src/adv/flux.gen.c bin/gen_vz
+src/adv/%.c: src/adv/%.gen.c bin/gen_vz
 	cat $< | bin/gen_vz > $@
 
-src/adv/flux.h: src/adv/flux.gen.h bin/gen_vz
-	cat $< | bin/gen_vz > $@
-
-src/adv/core.c: src/adv/core.gen.c bin/gen_vz
-	cat $< | bin/gen_vz  > $@
-
-src/adv/core.h: src/adv/core.gen.h bin/gen_vz
+src/adv/%.h: src/adv/%.gen.h bin/gen_vz
 	cat $< | bin/gen_vz > $@
 
 #-----------------------------------------------------------------------------
@@ -105,7 +114,7 @@ clean:
 	find obj -type f -print0 | xargs -0 rm -vf
 	find dep -type f -print0 | xargs -0 rm -vf
 	rm -vf src/libvz/gen_vz.c
-
+	rm -vf $(GEN_SRC) $(GEN_HEADERS)
 
 #-----------------------------------------------------------------------------
 

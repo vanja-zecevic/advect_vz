@@ -25,9 +25,6 @@
     void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
       int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
 
-    inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
     #pragma vzg splitend
 
 #endif

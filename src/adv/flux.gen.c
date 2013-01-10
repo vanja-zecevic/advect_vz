@@ -20,7 +20,6 @@
 #include "src/adv/core_face.c"
 #include "src/adv/flux_inline.c"
 #include "src/adv/flux.h"
-#include "src/adv/core.h"
 #include "src/adv/bc.h"
 /*----------------------------------------------------------------------------*/
 /* Generated main loops.  */
@@ -28,35 +27,7 @@
 #pragma vzg split SCHEME [up laxwend quickest_a quickest_b upmulti utopia \
   utopia_simp]
 
-void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-  int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha)
-{
-int iX;
-int iY;
-
-#pragma omp parallel for private(iX, iY)
-for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(update_fvflux_2D)
-    (phi_a, phi_fv, u_buff, iX, iY, nX, nY, delta_t, alpha);
-
-if (bc_phi == 1)
-    flux_2D_BC_1(phi_fv, u_buff, nX, nY, DELTA_X);
-else if (bc_phi == 2)
-    facevals_2D_BC_2 (phi_a, phi_fv, nX, nY, DELTA_X);
-
-#pragma omp parallel for private(iX, iY)
-for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  gather_fv_2D
-    (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
-
-if      (bc_phi == 1)
-    Phi_2D_BC_1(phi_a, nX, nY, DELTA_X);
-else if (bc_phi == 2)
-    Phi_2D_BC_2(phi_a, nX, nY, DELTA_X);
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
+inline static void APND_SCHEME(update_fvflux_2D) (PREC * sc_old, PREC * sc_fv,
   PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha)
 {
 int tid;
@@ -150,5 +121,34 @@ write_fv (iX, iY, nX, nY, 0,-1, 1, 3, u_face, sc_fv, sc_face, sc_face_grad,
   alpha, out_min, out_max, out);
 
 }
+/*----------------------------------------------------------------------------*/
+void APND_SCHEME(update_2D_flux) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
+  int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha)
+{
+int iX;
+int iY;
+
+#pragma omp parallel for private(iX, iY)
+for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
+  APND_SCHEME(update_fvflux_2D)
+    (phi_a, phi_fv, u_buff, iX, iY, nX, nY, delta_t, alpha);
+
+if (bc_phi == 1)
+    flux_2D_BC_1(phi_fv, u_buff, nX, nY, DELTA_X);
+else if (bc_phi == 2)
+    facevals_2D_BC_2 (phi_a, phi_fv, nX, nY, DELTA_X);
+
+#pragma omp parallel for private(iX, iY)
+for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
+  gather_fv_2D
+    (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
+
+if      (bc_phi == 1)
+    Phi_2D_BC_1(phi_a, nX, nY, DELTA_X);
+else if (bc_phi == 2)
+    Phi_2D_BC_2(phi_a, nX, nY, DELTA_X);
+
+}
+/*----------------------------------------------------------------------------*/
 #pragma vzg splitend
 

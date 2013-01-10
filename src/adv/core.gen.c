@@ -26,37 +26,8 @@
                                   /*------------------------------------------*/
 #pragma vzg split SCHEME [up laxwend quickest_a quickest_b upmulti utopia \
   utopia_simp]
-void APND_SCHEME(update_2D_nrm) (PREC * phi_a, PREC * phi_b, PREC * u_buff,
-  int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha)
-{
-int iX;
-int iY;
-
-PREC * phi_old;
-PREC * phi_new;
-
-if (iT%2==0) {
-    phi_old = phi_a;
-    phi_new = phi_b;
-}
-else {
-    phi_old = phi_b;
-    phi_new = phi_a;
-}
-
-#pragma omp parallel for private(iX, iY)
-for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(update_cell_2D)
-    (phi_old, phi_new, u_buff, iX, iY, nX, nY, delta_t, alpha);
-
-if      (bc_phi == 1)
-    Phi_2D_BC_1(phi_new, nX, nY, DELTA_X);
-else if (bc_phi == 2)
-    Phi_2D_BC_2(phi_new, nX, nY, DELTA_X);
-
-}
 /*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(update_cell_2D) (PREC * sc_old, PREC * sc_new,
+inline static void APND_SCHEME(update_cell_2D) (PREC * sc_old, PREC * sc_new,
   PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha)
 {
 int tid;
@@ -117,35 +88,7 @@ sum_face_d += sc_face_grad;
 
 }
 /*----------------------------------------------------------------------------*/
-void APND_SCHEME(update_2D_face) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
-  int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha)
-{
-int iX;
-int iY;
-
-#pragma omp parallel for private(iX, iY)
-for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  APND_SCHEME(update_fv_2D)
-    (phi_a, phi_fv, u_buff, iX, iY, nX, nY, delta_t, alpha);
-
-if (bc_phi == 1)
-    facevals_2D_BC_1(phi_fv, nX, nY, DELTA_X);
-else if (bc_phi == 2)
-    facevals_2D_BC_2(phi_a, phi_fv, nX, nY, DELTA_X);
-
-#pragma omp parallel for private(iX, iY)
-for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
-  gather_fv_2D
-    (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
-
-if      (bc_phi == 1)
-    Phi_2D_BC_1(phi_a, nX, nY, DELTA_X);
-else if (bc_phi == 2)
-    Phi_2D_BC_2(phi_a, nX, nY, DELTA_X);
-
-}
-/*----------------------------------------------------------------------------*/
-inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
+inline static void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
   PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha)
 {
 int tid;
@@ -178,33 +121,64 @@ get_face_grad_2d         (iX, iY, nX, nY, 0, 1, tid, &sc_face_grad, sc_old);
 *(sc_fv + nX*nY + tid) = DELTA_X_INV*alpha*sc_face_grad - sc_face*u_face;
 
 }
-#pragma vzg splitend
 /*----------------------------------------------------------------------------*/
-inline void gather_fv_2D (PREC * sc_old, PREC * sc_fv,
-  int iX, int iY, int nX, int nY, PREC delta_t)
+void APND_SCHEME(update_2D_nrm) (PREC * phi_a, PREC * phi_b, PREC * u_buff,
+  int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha)
 {
-int tid;
+int iX;
+int iY;
 
-PREC sum_face = LT(0.);
-PREC sc_face;
+PREC * phi_old;
+PREC * phi_new;
 
-tid = iY*nX + iX;
+if (iT%2==0) {
+    phi_old = phi_a;
+    phi_new = phi_b;
+}
+else {
+    phi_old = phi_b;
+    phi_new = phi_a;
+}
 
-/* x dir */
-read_face (iX, iY, nX, nY, 0, 0, 0, &sc_face, sc_fv);
-sum_face += sc_face;
+#pragma omp parallel for private(iX, iY)
+for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
+  APND_SCHEME(update_cell_2D)
+    (phi_old, phi_new, u_buff, iX, iY, nX, nY, delta_t, alpha);
 
-read_face (iX, iY, nX, nY,-1, 0, 0, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-/* y dir */
-read_face (iX, iY, nX, nY, 0, 0, 1, &sc_face, sc_fv);
-sum_face += sc_face;
-
-read_face (iX, iY, nX, nY, 0,-1, 1, &sc_face, sc_fv);
-sum_face -= sc_face;
-
-*(sc_old + tid) = *(sc_old + tid) + DELTA_X_INV*delta_t*sum_face;
+if      (bc_phi == 1)
+    Phi_2D_BC_1(phi_new, nX, nY, DELTA_X);
+else if (bc_phi == 2)
+    Phi_2D_BC_2(phi_new, nX, nY, DELTA_X);
 
 }
+/*----------------------------------------------------------------------------*/
+void APND_SCHEME(update_2D_face) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
+  int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha)
+{
+int iX;
+int iY;
+
+#pragma omp parallel for private(iX, iY)
+for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
+  APND_SCHEME(update_fv_2D)
+    (phi_a, phi_fv, u_buff, iX, iY, nX, nY, delta_t, alpha);
+
+if (bc_phi == 1)
+    facevals_2D_BC_1(phi_fv, nX, nY, DELTA_X);
+else if (bc_phi == 2)
+    facevals_2D_BC_2(phi_a, phi_fv, nX, nY, DELTA_X);
+
+#pragma omp parallel for private(iX, iY)
+for (iX=2; iX<(nX-2); iX++) for (iY=2; iY<(nY-2); iY++)
+  gather_fv_2D
+    (phi_a, phi_fv, iX, iY, nX, nY, delta_t);
+
+if      (bc_phi == 1)
+    Phi_2D_BC_1(phi_a, nX, nY, DELTA_X);
+else if (bc_phi == 2)
+    Phi_2D_BC_2(phi_a, nX, nY, DELTA_X);
+
+}
+#pragma vzg splitend
+/*----------------------------------------------------------------------------*/
 

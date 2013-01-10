@@ -24,19 +24,10 @@
     void APND_SCHEME(update_2D_nrm) (PREC * phi_a, PREC * phi_b, PREC * u_buff,
       int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
 
-    inline void APND_SCHEME(update_cell_2D) (PREC * sc_old, PREC * sc_new,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
     void APND_SCHEME(update_2D_face) (PREC * phi_a, PREC * phi_fv, PREC * u_buff,
       int iT, int nX, int nY, int bc_phi, PREC delta_t, PREC alpha);
 
-    inline void APND_SCHEME(update_fv_2D) (PREC * sc_old, PREC * sc_fv,
-      PREC * u_buff, int iX, int iY, int nX, int nY, PREC delta_t, PREC alpha);
-
     #pragma vzg splitend
-
-    inline void gather_fv_2D (PREC * sc_old, PREC * sc_fv,
-      int iX, int iY, int nX, int nY, PREC delta_t);
 
 #endif
 
